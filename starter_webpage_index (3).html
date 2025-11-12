@@ -1,0 +1,756 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>我的网站</title>
+  <meta name="description" content="一个简洁、响应式、可快速上手的个人网站模板。" />
+  <!-- 可选：站点图标与社交分享
+  <link rel="icon" href="/favicon.ico" />
+  <meta property="og:title" content="我的网站" />
+  <meta property="og:description" content="一个简洁、响应式、可快速上手的个人网站模板。" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://example.com" />
+  <meta property="og:image" content="https://example.com/cover.jpg" />
+  -->
+  <style>
+    /* —— 基础样式：支持浅/深色，移动优先 —— */
+    :root {
+      --bg: #0b0b0c;         /* 深色背景 */
+      --fg: #eaeaea;         /* 深色前景 */
+      --muted: #a0a0a0;
+      --brand: #5b9bff;      /* 品牌色（会被各房间主题覆盖） */
+      --card: #151518;
+      --border: #252528;
+      --focus: #7aa2ff;
+    }
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #ffffff;
+        --fg: #111111;
+        --muted: #555555;
+        --brand: #0b57d0;
+        --card: #f6f7f9;
+        --border: #e5e7eb;
+        --focus: #0b57d0;
+      }
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font: 16px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Noto Sans", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    a { color: var(--brand); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible {
+      outline: 2px solid var(--focus);
+      outline-offset: 2px;
+      border-radius: 10px;
+    }
+    .muted { color: var(--muted); }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+
+    /* —— 顶部导航 —— */
+    header { position: sticky; top: 0; z-index: 10; backdrop-filter: blur(8px); background: color-mix(in oklab, var(--bg) 85%, transparent); border-bottom: 1px solid var(--border); }
+    .nav { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+    .brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: .3px; }
+    .brand .dot { width: 12px; height: 12px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #fff8, var(--brand)); box-shadow: 0 0 16px var(--brand); }
+    nav ul { list-style: none; display: flex; gap: 18px; padding: 0; margin: 0; }
+    nav a { padding: 8px 10px; border-radius: 10px; }
+    nav a.active, nav a:hover { background: var(--card); }
+    .menu { display: none; }
+    @media (max-width: 780px) {
+      nav ul { display: none; }
+      nav ul.open { display: flex; flex-direction: column; gap: 10px; padding: 12px 0 16px; }
+      .menu { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--border); padding: 6px 10px; border-radius: 10px; background: var(--card); cursor: pointer; }
+    }
+
+    /* —— Hero —— */
+    .hero { padding: 80px 0 40px; text-align: center; }
+    .hero h1 { font-size: clamp(28px, 6vw, 48px); line-height: 1.2; margin: 0 0 12px; }
+    .hero p { margin: 0 auto; max-width: 720px; color: var(--muted); }
+    .actions { margin-top: 22px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border: 1px solid var(--border); border-radius: 12px; background: var(--card); color: var(--fg); cursor: pointer; }
+    .btn.primary { background: linear-gradient(135deg, var(--brand), color-mix(in oklab, var(--brand), #fff 20%)); border-color: transparent; box-shadow: 0 6px 22px color-mix(in oklab, var(--brand), #000 70%); }
+
+    /* —— Features —— */
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 40px 0; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 20px; }
+    .card h3 { margin: 0 0 6px; font-size: 18px; }
+    .card p { margin: 0; color: var(--muted); }
+    @media (max-width: 900px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+
+    /* —— About & Contact —— */
+    section { padding: 40px 0; }
+    .two { display: grid; grid-template-columns: 1.2fr .8fr; gap: 24px; }
+    @media (max-width: 900px) { .two { grid-template-columns: 1fr; } }
+    form { display: grid; gap: 12px; }
+    input, textarea { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); color: var(--fg); }
+    textarea { min-height: 120px; resize: vertical; }
+
+    /* —— 页脚 —— */
+    footer { border-top: 1px solid var(--border); padding: 28px 0 60px; color: var(--muted); }
+
+    /* —— 视图容器与宫格 —— */
+    .views section[role="view"] { display: none; }
+    .views section[role="view"].active { display: block; }
+    body.view-mode main > :not(.views) { display: none; }
+
+    .icon-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 14px; margin-top: 14px; }
+    @media (max-width: 640px) { .icon-grid { grid-template-columns: 1fr 1fr; } }
+    .icon-card { display: flex; align-items: center; gap: 12px; padding: 14px; border: 1px solid var(--border); border-radius: 16px; background: var(--card); transition: transform .15s ease; }
+    .icon-card:hover { transform: translateY(-2px); }
+    .icon { width: 44px; height: 44px; border-radius: 50%; display: inline-grid; place-items: center; font-size: 22px; background: color-mix(in oklab, var(--brand), #000 60%); }
+    .icon + .label { font-weight: 700; }
+
+    .room { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin: 16px 0; }
+    .room h3 { margin: 0 0 8px; }
+    .room p { margin: 0; color: var(--muted); }
+
+    /* —— UGC 上传 & 画廊 —— */
+    .upload { display: grid; gap: 10px; margin: 14px 0 8px; }
+    .upload .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    @media (max-width: 600px) { .upload .row { grid-template-columns: 1fr; } }
+    .gallery { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; }
+    @media (max-width: 900px) { .gallery { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+    @media (max-width: 560px) { .gallery { grid-template-columns: 1fr; } }
+    .tile { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; }
+    .tile img { width: 100%; height: 220px; object-fit: cover; display: block; }
+    .tile .meta { padding: 10px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .votes { font-weight: 700; }
+    .vote-btn { border: 1px solid var(--border); background: var(--bg); padding: 6px 10px; border-radius: 10px; cursor: pointer; }
+    .vote-btn[disabled] { opacity: .6; cursor: not-allowed; }
+
+    /* —— 主题色预设（可按喜好替换） —— */
+    .theme-genshin { --brand: #5b9bff; }
+    .theme-starrail { --brand: #9e7bff; }
+    .theme-bluearchive { --brand: #66d1ff; }
+    .theme-huayishan { --brand: #f2a8c6; }
+
+    /* —— 排行榜（Top3 方形） —— */
+    .lb-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; }
+    @media (max-width: 780px) { .lb-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 560px) { .lb-grid { grid-template-columns: 1fr 1fr 1fr; } }
+    .lb-item { position: relative; border: 1px solid var(--border); border-radius: 14px; overflow: hidden; background: var(--card); }
+    .lb-item .imgwrap { aspect-ratio: 1 / 1; background: #0003; }
+    .lb-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .lb-item .badge { position: absolute; top: 8px; left: 8px; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--border); background: var(--card); font-weight: 800; }
+    .lb-item .meta { padding: 8px 10px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+
+    /* —— 温馨房间背景 —— */
+    .room.cozy { 
+      background: 
+        radial-gradient(1200px 600px at -10% -20%, #ffffff10, transparent 60%),
+        radial-gradient(1200px 600px at 110% 120%, #ffffff08, transparent 60%),
+        linear-gradient(180deg, color-mix(in oklab, var(--card), #fff 3%), var(--card));
+      box-shadow: inset 0 1px 0 #fff1; 
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <div class="brand"><span class="dot"></span> 我的站点</div>
+      <nav>
+        <button class="menu" id="menuBtn" aria-label="打开菜单">菜单 ▾</button>
+        <ul id="navLinks">
+          <li><a href="#home" class="active">首页</a></li>
+          <li><a href="#features">特点</a></li>
+          <li><a href="#games" data-view>游戏</a></li>
+          <li><a href="#manga" data-view>漫画</a></li>
+          <li><a href="#about">关于</a></li>
+          <li><a href="#contact">联系</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="home" class="container">
+    <section class="hero">
+      <h1>你好，世界！🚀</h1>
+      <p>这是一个开箱即用的网页模板：语义化 HTML、响应式布局、浅/深色适配、无需外部框架。适合做个人主页、作品集或活动落地页。</p>
+      <div class="actions">
+        <a class="btn primary" href="#features">查看特点</a>
+        <a class="btn" href="#games" data-view>🎮 游戏</a>
+        <a class="btn" href="#manga" data-view>📚 漫画</a>
+        <a class="btn" href="#about">了解我</a>
+        <a class="btn" href="#contact">联系</a>
+      </div>
+    </section>
+
+    <!-- 首页：排行榜（Top3） -->
+    <section id="leaderboard-home">
+      <h2>今日排行榜 🏆</h2>
+      <div id="top-tile"></div>
+      <p class="muted">每位用户每天有 5 票，且需投给不同的作品。</p>
+    </section>
+
+    <section id="features">
+      <h2>特点</h2>
+      <div class="grid">
+        <article class="card">
+          <h3>响应式设计</h3>
+          <p>自动适配手机、平板与电脑端。</p>
+        </article>
+        <article class="card">
+          <h3>浅/深色</h3>
+          <p>跟随系统主题，视觉舒适。</p>
+        </article>
+        <article class="card">
+          <h3>易于扩展</h3>
+          <p>纯 HTML/CSS/JS，结构清晰，便于维护。</p>
+        </article>
+        <article class="card">
+          <h3>语义化</h3>
+          <p>header/main/section/footer 提升可访问性与 SEO。</p>
+        </article>
+        <article class="card">
+          <h3>轻量</h3>
+          <p>零依赖即可上线，加载迅速。</p>
+        </article>
+        <article class="card">
+          <h3>模板友好</h3>
+          <p>替换文案与样式即可完成个性化。</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="about" class="two">
+      <div>
+        <h2>关于我</h2>
+        <p>写一点自我介绍：你是谁、喜欢做什么、有什么作品或计划。可以放上社交账号或简历链接。</p>
+        <ul>
+          <li>🔭 正在做：……</li>
+          <li>🌱 学习中：……</li>
+          <li>📫 联系我：you@example.com</li>
+        </ul>
+      </div>
+      <aside class="card">
+        <h3>最新动态</h3>
+        <p>这里可以放近期更新、活动或公告。</p>
+      </aside>
+    </section>
+
+    <section id="contact" class="two">
+      <div>
+        <h2>联系我</h2>
+        <p>下面是一个示例表单（前端校验+控制台输出）。上线后可以接第三方表单服务或自建后端。</p>
+        <form id="contactForm">
+          <label>
+            姓名
+            <input name="name" placeholder="你的名字" required />
+          </label>
+          <label>
+            邮箱
+            <input name="email" type="email" placeholder="you@example.com" required />
+          </label>
+          <label>
+            留言
+            <textarea name="message" placeholder="想对我说的话"></textarea>
+          </label>
+          <button class="btn primary" type="submit">发送</button>
+        </form>
+      </div>
+      <div class="card">
+        <h3>常见问答</h3>
+        <p><strong>Q:</strong> 我可以把这个模板商用吗？<br />
+           <strong>A:</strong> 可以，本模板无版权限制，随意修改与发布。</p>
+      </div>
+    </section>
+
+    <!-- —— 自定义视图 —— -->
+    <section class="views">
+      <!-- 游戏目录 -->
+      <section id="games" role="view">
+        <h2>游戏</h2>
+        <p>选择一个世界，进入对应的“房间”。</p>
+        <div class="icon-grid">
+          <a class="icon-card" href="#room-genshin" data-view>
+            <span class="icon">✦</span>
+            <span class="label">原神</span>
+          </a>
+          <a class="icon-card" href="#room-starrail" data-view>
+            <span class="icon">🚆</span>
+            <span class="label">崩坏：星穹铁道</span>
+          </a>
+          <a class="icon-card" href="#room-bluearchive" data-view>
+            <span class="icon">📘</span>
+            <span class="label">蔚蓝档案</span>
+          </a>
+          <a class="icon-card" href="#room-huayishan" data-view>
+            <span class="icon">🎋</span>
+            <span class="label">花亦山心之月</span>
+          </a>
+          <a class="icon-card" href="#room-onmyoji" data-view>
+            <span class="icon">🪄</span>
+            <span class="label">阴阳师</span>
+          </a>
+          <a class="icon-card" href="#room-honor" data-view>
+            <span class="icon">🛡️</span>
+            <span class="label">王者荣耀</span>
+          </a>
+          <a class="icon-card" href="#room-afk" data-view>
+            <span class="icon">⚔️</span>
+            <span class="label">剑与远征</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- 漫画目录（先做占位） -->
+      <section id="manga" role="view">
+        <h2>漫画</h2>
+        <p>把你喜欢的漫画系列告诉我，我会为每个系列开一间房间。</p>
+      </section>
+
+      <!-- —— 各游戏风格房间 —— -->
+      <section id="room-genshin" role="view" class="theme-genshin">
+        <h2>原神 · 房间</h2>
+        <div class="room cozy">
+          <h3>提瓦特角落</h3>
+          <p>在这里放你的角色卡、Cos 照、攻略心得、最爱的配队、抽卡纪念等。</p>
+          <form class="upload" data-room="genshin">
+            <div class="row">
+              <input name="title" placeholder="作品标题（可选）" />
+              <input name="author" placeholder="你的昵称（可选）" />
+            </div>
+            <input type="file" name="image" accept="image/*" required />
+            <button class="btn primary" type="submit">上传图片</button>
+            <small class="muted">仅示例：文件将保存在本地浏览器的 localStorage 中。</small>
+          </form>
+          <div id="gallery-genshin" class="gallery"></div>
+        </div>
+      </section>
+
+      <section id="room-starrail" role="view" class="theme-starrail">
+        <h2>崩坏：星穹铁道 · 房间</h2>
+        <div class="room cozy">
+          <h3>开拓者的驿站</h3>
+          <p>记录开拓日记、角色面板、光锥收藏、抽卡时刻与车站摄影。</p>
+          <form class="upload" data-room="starrail">
+            <div class="row">
+              <input name="title" placeholder="作品标题（可选）" />
+              <input name="author" placeholder="你的昵称（可选）" />
+            </div>
+            <input type="file" name="image" accept="image/*" required />
+            <button class="btn primary" type="submit">上传图片</button>
+            <small class="muted">仅示例：文件将保存在本地浏览器的 localStorage 中。</small>
+          </form>
+          <div id="gallery-starrail" class="gallery"></div>
+        </div>
+      </section>
+
+      <section id="room-bluearchive" role="view" class="theme-bluearchive">
+        <h2>蔚蓝档案 · 房间</h2>
+        <div class="room cozy">
+          <h3>联邦学生会资料柜</h3>
+          <p>收录最爱的学生、活动 banner、作业（图集）、老师的日常等。</p>
+          <form class="upload" data-room="bluearchive">
+            <div class="row">
+              <input name="title" placeholder="作品标题（可选）" />
+              <input name="author" placeholder="你的昵称（可选）" />
+            </div>
+            <input type="file" name="image" accept="image/*" required />
+            <button class="btn primary" type="submit">上传图片</button>
+            <small class="muted">仅示例：文件将保存在本地浏览器的 localStorage 中。</small>
+          </form>
+          <div id="gallery-bluearchive" class="gallery"></div>
+        </div>
+      </section>
+
+      <section id="room-huayishan" role="view" class="theme-huayishan">
+        <h2>花亦山心之月 · 房间</h2>
+        <div class="room cozy">
+          <h3>国风雅苑</h3>
+          <p>典籍、曲谱、华服图录、角色手账与拍照灵感墙。</p>
+          <form class="upload" data-room="huayishan">
+            <div class="row">
+              <input name="title" placeholder="作品标题（可选）" />
+              <input name="author" placeholder="你的昵称（可选）" />
+            </div>
+            <input type="file" name="image" accept="image/*" required />
+            <button class="btn primary" type="submit">上传图片</button>
+            <small class="muted">仅示例：文件将保存在本地浏览器的 localStorage 中。</small>
+          </form>
+          <div id="gallery-huayishan" class="gallery"></div>
+        </div>
+      </section>
+
+      <!-- 新增：阴阳师 / 王者荣耀 / 剑与远征 房间 -->
+      <section id="room-onmyoji" role="view" class="theme-huayishan">
+        <h2>阴阳师 · 房间</h2>
+        <div class="room cozy">
+          <h3>平安京绘卷</h3>
+          <p>式神图鉴、御魂搭配、斗技心得、召唤纪念与同人图集。</p>
+          <form class="upload" data-room="onmyoji">
+            <div class="row">
+              <input name="title" placeholder="作品标题（可选）" />
+              <input name="author" placeholder="你的昵称（可选）" />
+            </div>
+            <input type="file" name="image" accept="image/*" required />
+            <button class="btn primary" type="submit">上传图片</button>
+            <small class="muted">仅示例：文件将保存在本地浏览器的 localStorage 中。</small>
+          </form>
+          <div id="gallery-onmyoji" class="gallery"></div>
+        </div>
+      </section>
+
+      <section id="room-honor" role="view" class="theme-starrail">
+        <h2>王者荣耀 · 房间</h2>
+        <div class="room cozy">
+          <h3>峡谷战报</h3>
+          <p>英雄与皮肤收藏、精彩击杀集锦、战绩里程碑与阵容搭配思路。</p>
+          <form class="upload" data-room="honor">
+            <div class="row">
+              <input name="title" placeholder="作品标题（可选）" />
+              <input name="author" placeholder="你的昵称（可选）" />
+            </div>
+            <input type="file" name="image" accept="image/*" required />
+            <button class="btn primary" type="submit">上传图片</button>
+            <small class="muted">仅示例：文件将保存在本地浏览器的 localStorage 中。</small>
+          </form>
+          <div id="gallery-honor" class="gallery"></div>
+        </div>
+      </section>
+
+      <section id="room-afk" role="view" class="theme-bluearchive">
+        <h2>剑与远征 · 房间</h2>
+        <div class="room cozy">
+          <h3>昆雅世界书房</h3>
+          <p>挂机日常、阵容思路、抽卡与家具纪念、奇境漫游心得。</p>
+          <form class="upload" data-room="afk">
+            <div class="row">
+              <input name="title" placeholder="作品标题（可选）" />
+              <input name="author" placeholder="你的昵称（可选）" />
+            </div>
+            <input type="file" name="image" accept="image/*" required />
+            <button class="btn primary" type="submit">上传图片</button>
+            <small class="muted">仅示例：文件将保存在本地浏览器的 localStorage 中。</small>
+          </form>
+          <div id="gallery-afk" class="gallery"></div>
+        </div>
+      </section>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="container">
+      © <span id="year"></span> 你的名字 · 保留所有权利
+    </div>
+  </footer>
+
+  <script>
+    // —— 导航：移动端菜单开关 ——
+    const menuBtn = document.getElementById('menuBtn');
+    const navLinks = document.getElementById('navLinks');
+    menuBtn?.addEventListener('click', () => navLinks.classList.toggle('open'));
+
+    // —— 年份自动更新 ——
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // —— 轻量级“路由”：根据 hash 显示视图 ——
+    const views = Array.from(document.querySelectorAll('section[role="view"]'));
+
+    function showView(id) {
+      // 识别是否进入视图模式（games / manga / room-*）
+      const validIds = new Set(views.map(v => `#${v.id}`));
+      const isView = validIds.has(id);
+
+      // 切换主界面可见性
+      document.body.classList.toggle('view-mode', isView);
+
+      // 切换各视图显示
+      views.forEach(v => v.classList.toggle('active', `#${v.id}` === id));
+
+      // 高亮导航（仅对 data-view 链接）
+      document.querySelectorAll('a[data-view]').forEach(a => {
+        a.classList.toggle('active', a.getAttribute('href') === id);
+      });
+
+      // 视图模式下滚动到顶部
+      if (isView) window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // 关闭移动端菜单
+      navLinks?.classList.remove('open');
+    }
+
+    window.addEventListener('hashchange', () => showView(location.hash));
+    // 初次加载
+    showView(location.hash);
+
+    // 让带 data-view 的链接只切换视图，不触发默认跳转
+    document.querySelectorAll('a[data-view]').forEach(a => {
+      a.addEventListener('click', (e) => {
+        const href = a.getAttribute('href');
+        if (href && href.startsWith('#')) {
+          e.preventDefault();
+          if (location.hash !== href) location.hash = href; else showView(href);
+        }
+      });
+    });
+
+    // —— 表单：阻止默认提交，打印数据 ——
+    document.getElementById('contactForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(e.target).entries());
+      console.log('表单数据：', data);
+      alert('已收到！(示例)\n打开浏览器控制台查看数据');
+      e.target.reset();
+    });
+
+    // —— 最小化测试（仅在 ?test=1 时运行） ——
+    (function runTestsIfRequested(){
+      const params = new URLSearchParams(location.search);
+      if (params.get('test') !== '1') return;
+
+      const wait = (ms=20) => new Promise(r => setTimeout(r, ms));
+      const get = (sel) => document.querySelector(sel);
+
+      (async () => {
+        try {
+          const original = location.hash;
+
+          console.log('\n🧪 运行内置测试...');
+
+          // T1: 切到游戏目录
+          location.hash = '#games';
+          await wait();
+          console.assert(document.body.classList.contains('view-mode'), 'T1: 进入视图模式');
+          console.assert(get('#games[role="view"]').classList.contains('active'), 'T1: #games 视图激活');
+
+          // T2: 切到原神房间
+          location.hash = '#room-genshin';
+          await wait();
+          console.assert(get('#room-genshin').classList.contains('active'), 'T2: 原神房间激活');
+
+          // T3: 返回主界面
+          location.hash = '';
+          showView('');
+          await wait();
+          console.assert(!document.body.classList.contains('view-mode'), 'T3: 退出视图模式');
+
+          // 还原哈希
+          location.hash = original;
+          console.log('✅ 路由测试通过（如需再次运行，加上 ?test=1）');
+        } catch (err) {
+          console.error('❌ 路由测试失败：', err);
+        }
+      })();
+    })();
+
+    // —— UGC 本地存储实现（演示用途） ——
+    const STORE_KEY = 'ugcImagesV1';
+    const MAX_IMAGE_SIZE = 3 * 1024 * 1024; // 3MB 以内
+
+    /** @typedef {{id:string, room:string, title?:string, author?:string, dataUrl:string, votes:number, createdAt:number}} UGC */
+
+    const loadImages = () => {
+      try { return JSON.parse(localStorage.getItem(STORE_KEY) || '[]'); } catch { return []; }
+    };
+    const saveImages = (arr) => localStorage.setItem(STORE_KEY, JSON.stringify(arr));
+    const uid = () => 'i_' + Math.random().toString(36).slice(2) + Date.now().toString(36);
+
+    // 票数：每天限 5 票且需不同作品
+    const todayKey = () => {
+      const d = new Date();
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth()+1).padStart(2,'0');
+      const dd = String(d.getDate()).padStart(2,'0');
+      return `voteLog:${yyyy}-${mm}-${dd}`;
+    };
+    const loadVoteLog = () => { try { return JSON.parse(localStorage.getItem(todayKey()) || '[]'); } catch { return []; } };
+    const saveVoteLog = (arr) => localStorage.setItem(todayKey(), JSON.stringify(arr));
+
+    function canVoteFor(imageId){
+      const log = loadVoteLog();
+      if (log.includes(imageId)) return { ok:false, reason:'你今天已经给这张图投过票啦' };
+      if (log.length >= 5) return { ok:false, reason:'你今天的 5 张投票额度已用完' };
+      return { ok:true };
+    }
+    function addVote(imageId){
+      const images = loadImages();
+      const idx = images.findIndex(x => x.id === imageId);
+      if (idx === -1) return false;
+      const check = canVoteFor(imageId);
+      if (!check.ok) { alert(check.reason); return false; }
+      images[idx].votes += 1;
+      saveImages(images);
+      const log = loadVoteLog();
+      log.push(imageId);
+      saveVoteLog(log);
+      return true;
+    }
+
+    // 渲染：房间画廊 & 首页排行榜
+    function renderGallery(room){
+      const mount = document.getElementById(`gallery-${room}`);
+      if (!mount) return;
+      const images = loadImages().filter(x => x.room === room);
+      mount.innerHTML = images.map(x => `
+        <div class="tile" data-id="${x.id}">
+          <img src="${x.dataUrl}" alt="${x.title || ''}" />
+          <div class="meta">
+            <div>
+              <div class="title">${x.title ? escapeHtml(x.title) : '未命名'}</div>
+              <small class="muted">${x.author ? escapeHtml(x.author) : '匿名'} · ${new Date(x.createdAt).toLocaleString()}</small>
+            </div>
+            <div>
+              <span class="votes" data-votes>❤️ ${x.votes}</span>
+              <button class="vote-btn" data-vote>投票</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      // 绑定投票事件
+      mount.querySelectorAll('[data-vote]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const tile = e.currentTarget.closest('.tile');
+          const id = tile?.getAttribute('data-id');
+          if (!id) return;
+          if (addVote(id)) {
+            const span = tile.querySelector('[data-votes]');
+            const images = loadImages();
+            const item = images.find(x => x.id === id);
+            if (span && item) span.textContent = `❤️ ${item.votes}`;
+            updateLeaderboard();
+          }
+        });
+      });
+    }
+
+    function updateLeaderboard(){
+      const box = document.getElementById('top-tile');
+      if (!box) return;
+      const arr = loadImages();
+      if (!arr.length) { box.innerHTML = '<p class="muted">还没有投稿，快去上传一张吧！</p>'; return; }
+      const top3 = arr.slice().sort((a,b)=> b.votes - a.votes || b.createdAt - a.createdAt).slice(0,3);
+      box.innerHTML = `
+        <div class="lb-grid">
+          ${top3.map((x,i)=>`
+            <div class="lb-item">
+              <span class="badge">${i+1}</span>
+              <div class="imgwrap"><img src="${x.dataUrl}" alt="${x.title || ''}"></div>
+              <div class="meta">
+                <div class="title">${x.title ? escapeHtml(x.title) : '未命名'}</div>
+                <small class="muted">票数：${x.votes} · ${labelOf(x.room)}</small>
+              </div>
+            </div>`).join('')}
+        </div>`;
+    }
+
+    const labelOf = (room) => ({
+      genshin:'原神', starrail:'崩坏：星穹铁道', bluearchive:'蔚蓝档案', huayishan:'花亦山心之月',
+      onmyoji:'阴阳师', honor:'王者荣耀', afk:'剑与远征'
+    })[room] || room;
+
+    // 上传：读取文件 -> 存储 -> 重新渲染
+    function wireUploads(){
+      document.querySelectorAll('form.upload').forEach(form => {
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const fd = new FormData(form);
+          const file = fd.get('image');
+          if (!(file && file.size)) { alert('请选择图片'); return; }
+          if (file.size > MAX_IMAGE_SIZE) { alert('图片过大（请小于 3MB）'); return; }
+          const reader = new FileReader();
+          reader.onload = () => {
+            const images = loadImages();
+            images.push({
+              id: uid(),
+              room: form.getAttribute('data-room'),
+              title: (fd.get('title')||'').toString().slice(0,80),
+              author: (fd.get('author')||'').toString().slice(0,40),
+              dataUrl: reader.result,
+              votes: 0,
+              createdAt: Date.now()
+            });
+            saveImages(images);
+            form.reset();
+            renderAllGalleries();
+            updateLeaderboard();
+            alert('上传成功！');
+          };
+          reader.readAsDataURL(file);
+        });
+      });
+    }
+
+    function renderAllGalleries(){
+      ['genshin','starrail','bluearchive','huayishan','onmyoji','honor','afk'].forEach(renderGallery);
+    }
+
+    // 简易转义
+    function escapeHtml(s){
+      return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
+    }
+
+    // 启动：绑定上传、渲染画廊 & 排行
+    wireUploads();
+    renderAllGalleries();
+    updateLeaderboard();
+
+    // —— 扩展测试：投票与上传（在 ?test=1 时追加断言） ——
+    (function extraTests(){
+      const params = new URLSearchParams(location.search);
+      if (params.get('test') !== '1') return;
+      (async () => {
+        // 清空存储，以便测试可重复
+        localStorage.removeItem(STORE_KEY);
+        localStorage.removeItem(todayKey());
+
+        // 构造四张假图（含 4 个不同房间）
+        const fakeDataUrl = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGNgYGD4DwABBAEAH8mXwQAAAABJRU5ErkJggg==';
+        const base = Date.now();
+        const seed = (room, i) => ({ id: uid(), room, title:`T${i}`, author:'test', dataUrl: fakeDataUrl, votes:0, createdAt: base+i });
+        const images = [seed('genshin',1), seed('starrail',2), seed('bluearchive',3), seed('huayishan',4)];
+        saveImages(images);
+
+        // T4: 不可对同一张图片在同一天投两次票
+        const first = addVote(images[0].id);
+        const dup = addVote(images[0].id);
+        console.assert(first === true && dup === false, 'T4: 同一张图当天不可重复投票');
+
+        // T5: 总票数上限 5（不同作品）
+        const ids = images.map(x=>x.id);
+        const okVotes = [addVote(ids[1]), addVote(ids[2]), addVote(ids[3])];
+        const fourth = addVote(ids[0]); // 第 4 次（不同作品）可以
+        const fifth = addVote(ids[1]);  // 第 5 次（但重复作品，应被规则挡下，保持不同作品）
+        console.assert(okVotes.every(v=>v===true) && fourth === true && fifth === false, 'T5: 5 票需分配给不同作品');
+
+        // 调整票数用于排行榜顺序验证
+        const altered = loadImages();
+        altered[0].votes = 10; altered[1].votes = 7; altered[2].votes = 3; altered[3].votes = 1;
+        saveImages(altered);
+        updateLeaderboard();
+
+        // T6: 排行榜应显示 Top3 且为正方形缩略
+        const box = document.getElementById('top-tile');
+        const count = (box.querySelectorAll('.lb-item')||[]).length;
+        console.assert(count === Math.min(3, loadImages().length), 'T6: 排行榜应显示前 3 张');
+        const hasSquares = box.querySelectorAll('.lb-item .imgwrap').length === count;
+        console.assert(hasSquares, 'T6: 排行缩略图为正方形容器');
+
+        // T7: labelOf 映射包含新增房间
+        console.assert(labelOf('honor') === '王者荣耀' && labelOf('afk') === '剑与远征', 'T7: labelOf 映射正确');
+
+        // T8: 画廊只显示对应房间作品
+        const extra = seed('honor',5);
+        const cur = loadImages(); cur.push(extra); saveImages(cur);
+        renderGallery('honor');
+        const honorCount = (document.querySelectorAll('#gallery-honor .tile')||[]).length;
+        console.assert(honorCount >= 1, 'T8: 新增作品显示在对应房间');
+
+        console.log('✅ 上传/投票/排行榜测试通过');
+      })();
+    })();
+
+  </script>
+</body>
+</html>
